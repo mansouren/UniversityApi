@@ -12,6 +12,8 @@ namespace UniversityApi.Entities.Contracts
         Task AddUser(User user);
         Task<bool> IsExistEmail(string email);
         Task<bool> IsExistUsername(string username);
+        Task<bool> IsExistUser(string username, string password);
+        Task<User> GetUserByusernameAndPassword(string username, string password);
         Task Save();
     }
 }

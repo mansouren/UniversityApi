@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace UniversityApi.Entities.Models
 {
    public class User : BaseEntity
     {
+        public int RoleId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string FirstName { get; set; }
@@ -22,6 +24,9 @@ namespace UniversityApi.Entities.Models
         #region Relations
         public ICollection<Student> Students { get; set; }
         public ICollection<Teacher> Teachers { get; set; }
+
+        [ForeignKey(nameof(RoleId))]
+        public Role Role { get; set; }
         #endregion
     }
 

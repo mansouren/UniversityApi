@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UniversityApi.Common.Security;
+using UniversityApi.Common.Utilities;
 using UniversityApi.Entities.Contracts;
 using UniversityApi.Entities.Models;
 using UniversityApi.Services.Interfaces;
@@ -40,6 +41,20 @@ namespace UniversityApi.Services.Services
             user.Password = PasswordHelper.EncodePasswordMd5(user.Password);
             await userRepository.AddUser(user);
             await userRepository.Save();
+            return user;
+        }
+
+        public async Task<bool> IsExistUser(string username, string password)
+        {
+            string HashPassword = PasswordHelper.EncodePasswordMd5(password);
+            bool exist = await userRepository.IsExistUser(username.Trim().ToLower(), HashPassword);
+            return exist;
+        }
+
+        public async Task<User> GetUserByUsernameAndPassword(string username, string password)
+        {
+            string HashPassword = PasswordHelper.EncodePasswordMd5(password);
+            User user= await userRepository.GetUserByusernameAndPassword(stringExtensions.ToLowerAndTrim(username), HashPassword);
             return user;
         }
     }

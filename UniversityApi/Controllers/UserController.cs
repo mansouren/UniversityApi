@@ -15,10 +15,12 @@ namespace UniversityApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
+        private readonly IJwtService jwtService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IJwtService jwtService)
         {
             this.userService = userService;
+            this.jwtService = jwtService;
         }
 
         [HttpPost("[action]")]
@@ -32,12 +34,12 @@ namespace UniversityApi.Controllers
             {
                 case UserExistence.UsernameAndEmailDuplicate:
                     return BadRequest("نام کاربری و ایمیل تکرای است!");
-                    
+
                 case UserExistence.EmailDuplicate:
                     return BadRequest("ایمیل تکرای است");
                 case UserExistence.UsernameDuplicate:
                     return BadRequest("نام کاربری تکرای است");
-               
+
             }
 
             User user = new User
@@ -45,9 +47,23 @@ namespace UniversityApi.Controllers
                 Username = registerViewModel.UserName,
                 Email = registerViewModel.Email,
                 Password = registerViewModel.Password,
+                RoleId = 1
 
             };
-           return await userService.AddUser(user);
+            return await userService.AddUser(user);
+        }
+
+        [HttpGet("[action]")]
+        public async Task<string> Token(string username, string password)
+        {
+            bool exist = await userService.IsExistUser(username, password);
+            if (!exist)
+                throw new BadHttpRequestException("کاربری با این مشخصات یافت نشد!");
+
+            User user = await userService.GetUserByUsernameAndPassword(username, password);
+
+            return jwtService.GenerateToken(user);
+
         }
     }
 }

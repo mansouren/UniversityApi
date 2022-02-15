@@ -23,9 +23,21 @@ namespace UniversityApi.Data.Repositories
            
         }
 
+        public async Task<User> GetUserByusernameAndPassword(string username, string password)
+        {
+            var user =await context.Users.Include(u => u.Role)
+                .SingleOrDefaultAsync(u => u.Username == username && u.Password == password);
+            return user;
+        }
+
         public async Task<bool> IsExistEmail(string email)
         {
            return await context.Users.AnyAsync(u => u.Email == email);
+        }
+
+        public async Task<bool> IsExistUser(string username, string password)
+        {
+           return await context.Users.AnyAsync(u => u.Username == username && u.Password == password);
         }
 
         public async Task<bool> IsExistUsername(string username)
