@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication;
 using UniversityApi.Data;
 using UniversityApi.Data.Repositories;
 using UniversityApi.Entities.Contracts;
