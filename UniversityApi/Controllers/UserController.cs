@@ -25,7 +25,7 @@ namespace UniversityApi.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles="User")]
+        //[Authorize(Roles="User")]
         public async Task<IEnumerable<User>> Get()
         {
             return await userService.GetUsers();
