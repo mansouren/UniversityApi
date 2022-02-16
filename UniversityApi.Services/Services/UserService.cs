@@ -57,5 +57,10 @@ namespace UniversityApi.Services.Services
             User user= await userRepository.GetUserByusernameAndPassword(stringExtensions.ToLowerAndTrim(username), HashPassword);
             return user;
         }
+
+        public async Task<IEnumerable<User>> GetUsers()
+        {
+           return await userRepository.GetUsers();
+        }
     }
 }

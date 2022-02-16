@@ -30,6 +30,11 @@ namespace UniversityApi.Data.Repositories
             return user;
         }
 
+        public async Task<IEnumerable<User>> GetUsers()
+        {
+            return await context.Users.ToListAsync();
+        }
+
         public async Task<bool> IsExistEmail(string email)
         {
            return await context.Users.AnyAsync(u => u.Email == email);

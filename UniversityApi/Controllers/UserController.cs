@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,15 @@ namespace UniversityApi.Controllers
             this.jwtService = jwtService;
         }
 
+        [HttpGet]
+        [Authorize(Roles="User")]
+        public async Task<IEnumerable<User>> Get()
+        {
+            return await userService.GetUsers();
+        }
+
         [HttpPost("[action]")]
+        [Authorize]
         public async Task<ActionResult<User>> Create(RegisterViewModel registerViewModel)
         {
             if (!ModelState.IsValid)

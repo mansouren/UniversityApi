@@ -8,23 +8,30 @@ using UniversityApi.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Microsoft.Extensions.Options;
+using UniversityApi.Common;
 
 namespace UniversityApi.Services.Services
 {
     public class JwtService : IJwtService
     {
+        private readonly SiteSettings _settings;
+        public JwtService(IOptionsSnapshot<SiteSettings> settings)
+        {
+            _settings = settings.Value;
+        }
         public string GenerateToken(User user)
         {
-            byte[] secretKey = Encoding.UTF8.GetBytes("MySecretKey123456789");
+            byte[] secretKey = Encoding.UTF8.GetBytes(_settings.JwtSettings.SecretKey);
             var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKey),SecurityAlgorithms.HmacSha256Signature);
             var claims = GetClaims(user);
             var descriptor = new SecurityTokenDescriptor
             {
-                Issuer = "MyWebSite",
-                Audience = "MyWebsite",
+                Issuer = _settings.JwtSettings.Issuer,
+                Audience = _settings.JwtSettings.Audience,
                 IssuedAt = DateTime.Now,
-                NotBefore = DateTime.Now,
-                Expires = DateTime.Now.AddMinutes(30),
+                NotBefore = DateTime.Now.AddMinutes(_settings.JwtSettings.NotBeforeMinutes),
+                Expires = DateTime.Now.AddMinutes(_settings.JwtSettings.ExpirationMinutes),
                 SigningCredentials = signingCredentials,
                 Subject =new ClaimsIdentity(claims)
             };
