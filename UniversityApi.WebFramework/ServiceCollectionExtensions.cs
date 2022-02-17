@@ -44,7 +44,8 @@ namespace UniversityApi.WebFramework
             }).AddJwtBearer(options =>
             {
                 byte[] secretKey = Encoding.UTF8.GetBytes(jwtSettings.SecretKey);
-                
+                byte[] encryptKey = Encoding.UTF8.GetBytes(jwtSettings.EncryptionKey);
+
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -62,7 +63,9 @@ namespace UniversityApi.WebFramework
                     ValidAudience = jwtSettings.Audience,
 
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(secretKey)
+                    IssuerSigningKey = new SymmetricSecurityKey(secretKey),
+
+                    TokenDecryptionKey = new SymmetricSecurityKey(encryptKey)
                 };
             });
         }

@@ -24,6 +24,10 @@ namespace UniversityApi.Services.Services
         {
             byte[] secretKey = Encoding.UTF8.GetBytes(_settings.JwtSettings.SecretKey);
             var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKey),SecurityAlgorithms.HmacSha256Signature);
+
+            byte[] encryptKey = Encoding.UTF8.GetBytes(_settings.JwtSettings.EncryptionKey);
+            var encryptionCredential = new EncryptingCredentials(new SymmetricSecurityKey(encryptKey), SecurityAlgorithms.Aes128KW, SecurityAlgorithms.Aes128CbcHmacSha256);
+            
             var claims = GetClaims(user);
             var descriptor = new SecurityTokenDescriptor
             {
@@ -33,6 +37,7 @@ namespace UniversityApi.Services.Services
                 NotBefore = DateTime.Now.AddMinutes(_settings.JwtSettings.NotBeforeMinutes),
                 Expires = DateTime.Now.AddMinutes(_settings.JwtSettings.ExpirationMinutes),
                 SigningCredentials = signingCredentials,
+                EncryptingCredentials = encryptionCredential,
                 Subject =new ClaimsIdentity(claims)
             };
 
