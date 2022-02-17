@@ -23,7 +23,7 @@ namespace UniversityApi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var entitiesAssembly = typeof(BaseEntity).Assembly;
+            var entitiesAssembly = typeof(IEntity).Assembly;
             modelBuilder.ApplyConfigurationsFromAssembly(entitiesAssembly);
             base.OnModelCreating(modelBuilder); 
         }

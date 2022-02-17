@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UniversityApi.Common.Security;
 using UniversityApi.Common.Utilities;
+using UniversityApi.Data.Repositories;
 using UniversityApi.Entities.Contracts;
 using UniversityApi.Entities.Models;
 using UniversityApi.Services.Interfaces;
@@ -36,11 +38,10 @@ namespace UniversityApi.Services.Services
                 return UserExistence.Ok;
         }
 
-        public async Task<User> AddUser(User user)
+        public async Task<User> AddUser(User user,CancellationToken cancellationToken)
         {
             user.Password = PasswordHelper.EncodePasswordMd5(user.Password);
-            await userRepository.AddUser(user);
-            await userRepository.Save();
+            await userRepository.AddAsync(user,cancellationToken);
             return user;
         }
 

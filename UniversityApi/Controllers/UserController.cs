@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using UniversityApi.Entities.Models;
 using UniversityApi.Services.Interfaces;
@@ -33,7 +34,7 @@ namespace UniversityApi.Controllers
 
         [HttpPost("[action]")]
         [Authorize]
-        public async Task<ActionResult<User>> Create(RegisterViewModel registerViewModel)
+        public async Task<ActionResult<User>> Create(RegisterViewModel registerViewModel, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
                 return BadRequest(registerViewModel);
@@ -59,7 +60,7 @@ namespace UniversityApi.Controllers
                 RoleId = 1
 
             };
-            return await userService.AddUser(user);
+            return await userService.AddUser(user,cancellationToken);
         }
 
         [HttpGet("[action]")]

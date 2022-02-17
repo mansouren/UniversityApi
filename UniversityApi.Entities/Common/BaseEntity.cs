@@ -7,9 +7,18 @@ using System.Threading.Tasks;
 
 namespace UniversityApi.Entities.Common
 {
-   public abstract class BaseEntity 
+    public interface IEntity
+    {
+
+    }
+   public abstract class BaseEntity<Tkey> : IEntity 
     {
         [Key]
-        public int Id { get; set; }
+        public Tkey Id { get; set; }
+    }
+
+    public abstract class BaseEntity : BaseEntity<int>
+    {
+
     }
 }
