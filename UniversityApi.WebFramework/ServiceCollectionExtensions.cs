@@ -1,15 +1,21 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Common;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using UniversityApi.Common;
+using UniversityApi.Common.Utilities;
 using UniversityApi.Data;
 using UniversityApi.Data.Repositories;
 using UniversityApi.Entities.Contracts;
+using UniversityApi.Entities.Models;
 using UniversityApi.Services.Interfaces;
 using UniversityApi.Services.Services;
 
@@ -67,7 +73,37 @@ namespace UniversityApi.WebFramework
 
                     TokenDecryptionKey = new SymmetricSecurityKey(encryptKey)
                 };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = async context =>
+                    {
+                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+
+                        //Invoking Claims that stored in claims in jwtService
+                        var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+                        if (claimsIdentity.Claims?.Any() != true)
+                            context.Fail("Token Has No Claim!");
+
+                        var securityStamp = claimsIdentity.FindFirstValue(new ClaimsIdentityOptions().SecurityStampClaimType);
+                        if (!securityStamp.HasValue())
+                            context.Fail("This token has no security stamp");
+                      
+                        //int userid =claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value.ToInt();
+                        
+                        int userId = claimsIdentity.GetUserId<int>();
+                        User user =await userService.GetUserById(userId, context.HttpContext.RequestAborted);
+                        
+                        if (user.SecurityStamp != Guid.Parse(securityStamp))
+                            context.Fail("Token Security Stamp Is Not Valid!");
+
+                        if (!user.IsActive)
+                            context.Fail("User is Not Active!");
+
+                        await userService.UpdateLastLoginDate(user, context.HttpContext.RequestAborted);
+                    }
+                };
             });
         }
     }
-}
+} 

@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using UniversityApi.Common;
+using Microsoft.AspNetCore.Identity;
 
 namespace UniversityApi.Services.Services
 {
@@ -53,7 +54,8 @@ namespace UniversityApi.Services.Services
             {
                 new Claim(ClaimTypes.Name,user.Username),
                 new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
-                new Claim(ClaimTypes.Email,user.Email)
+                new Claim(ClaimTypes.Email,user.Email),
+                new Claim(new ClaimsIdentityOptions().SecurityStampClaimType,user.SecurityStamp.ToString())
             };
             Role[] roles = new Role[] { new Role { Name = user.Role.Name } };
             foreach (var role in roles)

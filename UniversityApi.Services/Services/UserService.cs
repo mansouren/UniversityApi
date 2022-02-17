@@ -63,5 +63,22 @@ namespace UniversityApi.Services.Services
         {
            return await userRepository.GetUsers();
         }
+
+        public async Task UpdateSecurityStamp(User user, CancellationToken cancellationToken)
+        {
+            user.SecurityStamp = Guid.NewGuid();
+            await userRepository.UpdateAsync(user, cancellationToken);
+        }
+
+        public async Task<User> GetUserById(int id, CancellationToken cancellationToken)
+        {
+           return await userRepository.GetById(cancellationToken, id);
+        }
+
+        public async Task UpdateLastLoginDate(User user, CancellationToken cancellationToken)
+        {
+            user.LastLoginDate = DateTimeOffset.Now;
+            await userRepository.UpdateAsync(user, cancellationToken);
+        }
     }
 }

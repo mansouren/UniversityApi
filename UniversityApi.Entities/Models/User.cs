@@ -12,6 +12,11 @@ namespace UniversityApi.Entities.Models
 {
    public class User : BaseEntity
     {
+        public User()
+        {
+            IsActive = true;
+            SecurityStamp = Guid.NewGuid();
+        }
         public int RoleId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
@@ -20,6 +25,9 @@ namespace UniversityApi.Entities.Models
         public string Address { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
+        public bool IsActive { get; set; }
+        public Guid SecurityStamp { get; set; }
+        public DateTimeOffset? LastLoginDate { get; set; }
 
         #region Relations
         public ICollection<Student> Students { get; set; }

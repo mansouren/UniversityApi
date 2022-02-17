@@ -32,6 +32,16 @@ namespace UniversityApi.Controllers
             return await userService.GetUsers();
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<User>> Get(int id, CancellationToken cancellationToken)
+        {
+           var user= await userService.GetUserById(id, cancellationToken);
+            if (user == null)
+                return NotFound();
+
+            return user;
+        }
+
         [HttpPost("[action]")]
         [Authorize]
         public async Task<ActionResult<User>> Create(RegisterViewModel registerViewModel, CancellationToken cancellationToken)
