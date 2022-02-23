@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using UniversityApi.Entities.Models;
 using UniversityApi.Services.Interfaces;
 using UniversityApi.Services.ViewModels;
+using UniversityApi.WebFramework.Api;
 
 namespace UniversityApi.Controllers
 {
@@ -33,7 +34,7 @@ namespace UniversityApi.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<User>> Get(int id, CancellationToken cancellationToken)
+        public async Task<ApiResult<User>> Get(int id, CancellationToken cancellationToken)
         {
            var user= await userService.GetUserById(id, cancellationToken);
             if (user == null)
