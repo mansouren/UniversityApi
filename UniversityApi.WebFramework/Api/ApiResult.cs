@@ -20,7 +20,7 @@ namespace UniversityApi.WebFramework.Api
             StatusCode = statusCode;
             Message = message ?? statusCode.ToDisplay();
         }
-
+        #region Implicit Operators
         public static implicit operator ApiResult(OkResult result)
         {
             return new ApiResult(true, ApiResultStatusCode.Success);
@@ -51,7 +51,7 @@ namespace UniversityApi.WebFramework.Api
         {
             return new ApiResult(false, ApiResultStatusCode.NotFound);
         }
-      
+        #endregion
     }
 
     public class ApiResult<TData> : ApiResult where TData : class
@@ -62,6 +62,7 @@ namespace UniversityApi.WebFramework.Api
         {
             Data = data;
         }
+        #region Implicit Operators
 
         public static implicit operator ApiResult<TData>(TData value)
         {
@@ -70,7 +71,7 @@ namespace UniversityApi.WebFramework.Api
 
         public static implicit operator ApiResult<TData>(OkResult result)
         {
-            return new ApiResult<TData>(true, ApiResultStatusCode.Success,null);
+            return new ApiResult<TData>(true, ApiResultStatusCode.Success, null);
         }
 
         public static implicit operator ApiResult<TData>(OkObjectResult result)
@@ -86,7 +87,7 @@ namespace UniversityApi.WebFramework.Api
         public static implicit operator ApiResult<TData>(BadRequestObjectResult result)
         {
             string message = result.Value.ToString();
-            if(result.Value is SerializableError error)
+            if (result.Value is SerializableError error)
             {
                 IEnumerable<string> errorMessages = error.SelectMany(p => (string[])p.Value).Distinct();
                 message = string.Join("|", errorMessages);
@@ -106,7 +107,8 @@ namespace UniversityApi.WebFramework.Api
 
         public static implicit operator ApiResult<TData>(NotFoundObjectResult result)
         {
-            return new ApiResult<TData>(false, ApiResultStatusCode.NotFound,(TData)result.Value);
+            return new ApiResult<TData>(false, ApiResultStatusCode.NotFound, (TData)result.Value);
         }
+        #endregion
     }
 }

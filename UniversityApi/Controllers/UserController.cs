@@ -28,6 +28,7 @@ namespace UniversityApi.Controllers
 
         [HttpGet]
         //[Authorize(Roles="User")]
+        [ApiResultFilter]
         public async Task<IEnumerable<User>> Get()
         {
             return await userService.GetUsers();
@@ -45,7 +46,7 @@ namespace UniversityApi.Controllers
 
         [HttpPost("[action]")]
         [Authorize]
-        public async Task<ActionResult<User>> Create(RegisterViewModel registerViewModel, CancellationToken cancellationToken)
+        public async Task<ApiResult<User>> Create(RegisterViewModel registerViewModel, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
                 return BadRequest(registerViewModel);
@@ -71,7 +72,7 @@ namespace UniversityApi.Controllers
                 RoleId = 1
 
             };
-            return await userService.AddUser(user,cancellationToken);
+            return Ok(await userService.AddUser(user,cancellationToken));
         }
 
         [HttpGet("[action]")]
