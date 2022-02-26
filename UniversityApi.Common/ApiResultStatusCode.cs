@@ -17,6 +17,9 @@ namespace UniversityApi.Common
         NotFound = 3,
 
         [Display(Name = "لیست خالی است")]
-        ListEmpty = 4
+        ListEmpty = 4,
+
+        [Display(Name = "خطایی در پردازش رخ داده است")]
+        LogicError = 5
     }
 }

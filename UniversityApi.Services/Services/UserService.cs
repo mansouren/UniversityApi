@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversityApi.Common.Exceptions;
 using UniversityApi.Common.Security;
 using UniversityApi.Common.Utilities;
 using UniversityApi.Data.Repositories;
@@ -40,6 +41,19 @@ namespace UniversityApi.Services.Services
 
         public async Task<User> AddUser(User user,CancellationToken cancellationToken)
         {
+            UserExistence userExistence = await IsExistUsernameAndEmail(user.Email, user.Username);
+
+            switch (userExistence)
+            {
+                case UserExistence.UsernameAndEmailDuplicate:
+                    throw new BadRequestException("نام کاربری و ایمیل تکرای است!");
+
+                case UserExistence.EmailDuplicate:
+                    throw new BadRequestException("ایمیل تکرای است");
+                case UserExistence.UsernameDuplicate:
+                    throw new BadRequestException("نام کاربری تکرای است");
+
+            }
             user.Password = PasswordHelper.EncodePasswordMd5(user.Password);
             await userRepository.AddAsync(user,cancellationToken);
             return user;

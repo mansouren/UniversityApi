@@ -50,23 +50,9 @@ namespace UniversityApi.Controllers
         //[Authorize]
         public async Task<ApiResult<User>> Create(RegisterViewModel registerViewModel, CancellationToken cancellationToken)
         {
-            //if (!ModelState.IsValid)
+            //if (!ModelState.IsValid) (We had Automated ModelStateValidation in ApiResultFilterAttribute - BadRequstObjectResult
             //    return BadRequest(registerViewModel);
             
-            UserExistence userExistence = await userService.IsExistUsernameAndEmail(registerViewModel.Email, registerViewModel.UserName);
-
-            switch (userExistence)
-            {
-                case UserExistence.UsernameAndEmailDuplicate:
-                    return BadRequest("نام کاربری و ایمیل تکرای است!");
-
-                case UserExistence.EmailDuplicate:
-                    return BadRequest("ایمیل تکرای است");
-                case UserExistence.UsernameDuplicate:
-                    return BadRequest("نام کاربری تکرای است");
-
-            }
-
             User user = new User
             {
                 Username = registerViewModel.UserName,
