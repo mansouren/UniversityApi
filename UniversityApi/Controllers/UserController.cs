@@ -10,10 +10,12 @@ using UniversityApi.Entities.Models;
 using UniversityApi.Services.Interfaces;
 using UniversityApi.Services.ViewModels;
 using UniversityApi.WebFramework.Api;
+using UniversityApi.WebFramework.Filters;
 
 namespace UniversityApi.Controllers
 {
     [Route("api/[controller]")]
+    [ApiResultFilter]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -28,7 +30,7 @@ namespace UniversityApi.Controllers
 
         [HttpGet]
         //[Authorize(Roles="User")]
-        [ApiResultFilter]
+        //[ApiResultFilter]
         public async Task<IEnumerable<User>> Get()
         {
             return await userService.GetUsers();
@@ -45,11 +47,12 @@ namespace UniversityApi.Controllers
         }
 
         [HttpPost("[action]")]
-        [Authorize]
+        //[Authorize]
         public async Task<ApiResult<User>> Create(RegisterViewModel registerViewModel, CancellationToken cancellationToken)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(registerViewModel);
+            //if (!ModelState.IsValid)
+            //    return BadRequest(registerViewModel);
+            
             UserExistence userExistence = await userService.IsExistUsernameAndEmail(registerViewModel.Email, registerViewModel.UserName);
 
             switch (userExistence)

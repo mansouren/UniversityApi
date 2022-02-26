@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace UniversityApi.Services.ViewModels
 {
-    public class RegisterViewModel
+    public class RegisterViewModel : IValidatableObject
     {
         [Display(Name ="نام کاربری")]
         [Required(ErrorMessage = "لطفا مقداری وارد کنید")]
@@ -33,6 +33,13 @@ namespace UniversityApi.Services.ViewModels
         [Compare(nameof(Password),ErrorMessage ="تکرار کلمه عبور صحیح نمی باشد")]
         public string RePassword { get; set; }
 
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (UserName.Equals("test", StringComparison.OrdinalIgnoreCase))
+                yield return new ValidationResult("نام کاربری نمی تواند test باشد", new string[] { nameof(UserName) });
+            if (Password.Equals("123456"))
+                yield return new ValidationResult("پسورد نمی تواند 123456 باشد", new string[] { nameof(Password) });
+        }
     }
 
     public enum UserExistence

@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UniversityApi.Common;
 using UniversityApi.Common.Utilities;
 
 namespace UniversityApi.WebFramework.Api
@@ -56,6 +55,7 @@ namespace UniversityApi.WebFramework.Api
 
     public class ApiResult<TData> : ApiResult where TData : class
     {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public TData Data { get; set; }
         public ApiResult(bool isSuccess, ApiResultStatusCode statusCode,TData data, string message = null) 
             : base(isSuccess, statusCode, message)

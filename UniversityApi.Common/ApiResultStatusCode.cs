@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UniversityApi.WebFramework.Api
+namespace UniversityApi.Common
 {
     public enum ApiResultStatusCode
     {
