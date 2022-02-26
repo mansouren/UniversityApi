@@ -1,4 +1,5 @@
 ﻿using Common;
+using ElmahCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,8 +31,6 @@ namespace UniversityApi.WebFramework
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IJwtService, JwtService>();
 
-            
-           
         }
 
         public static void AddDatabasecontext(this IServiceCollection services, IConfiguration configuration)

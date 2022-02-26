@@ -1,3 +1,5 @@
+using ElmahCore.Mvc;
+using ElmahCore.Sql;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +43,11 @@ namespace UniversityApi
             services.AddJwtAuthentication(_siteSettings.JwtSettings);
             services.RegisterServices();
             services.AddDatabasecontext(Configuration);
+            services.AddElmah<SqlErrorLog>(options =>
+            {
+                options.Path = "/elmah-errors";
+                options.ConnectionString = Configuration.GetConnectionString("Elmah");
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "UniversityApi", Version = "v1" });
@@ -65,7 +72,9 @@ namespace UniversityApi
             app.UseAuthentication();
             
             app.UseAuthorization();
-
+            
+            app.UseElmah();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

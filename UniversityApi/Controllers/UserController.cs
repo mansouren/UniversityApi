@@ -50,7 +50,7 @@ namespace UniversityApi.Controllers
         //[Authorize]
         public async Task<ApiResult<User>> Create(RegisterViewModel registerViewModel, CancellationToken cancellationToken)
         {
-            //if (!ModelState.IsValid) (We had Automated ModelStateValidation in ApiResultFilterAttribute - BadRequstObjectResult
+            //if (!ModelState.IsValid) (We had Automated ModelStateValidation in ApiResultFilterAttribute - BadRequstObjectResult)
             //    return BadRequest(registerViewModel);
             
             User user = new User
