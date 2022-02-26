@@ -20,6 +20,9 @@ namespace UniversityApi.Common
         ListEmpty = 4,
 
         [Display(Name = "خطایی در پردازش رخ داده است")]
-        LogicError = 5
+        LogicError = 5,
+
+        [Display(Name = "خطای عدم دسترسی")]
+        UnAuthorized = 6
     }
 }
