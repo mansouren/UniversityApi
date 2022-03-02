@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversityApi.Entities.Models;
+using UniversityApi.Services.Dtos;
 using UniversityApi.Services.Interfaces;
 using UniversityApi.Services.ViewModels;
 using UniversityApi.WebFramework.Api;
@@ -20,11 +22,13 @@ namespace UniversityApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
+        private readonly ILogger<UserController> logger;
         private readonly IJwtService jwtService;
 
-        public UserController(IUserService userService, IJwtService jwtService)
+        public UserController(IUserService userService,ILogger<UserController> logger, IJwtService jwtService)
         {
             this.userService = userService;
+            this.logger = logger;
             this.jwtService = jwtService;
         }
 
@@ -46,22 +50,37 @@ namespace UniversityApi.Controllers
             return user;
         }
 
+        //[HttpPost("[action]")]
+        ////[Authorize]
+        //public async Task<ApiResult<User>> Create(RegisterViewModel registerViewModel, CancellationToken cancellationToken)
+        //{
+        //    //if (!ModelState.IsValid) (We had Automated ModelStateValidation in ApiResultFilterAttribute - BadRequstObjectResult)
+        //    //    return BadRequest(registerViewModel);
+
+        //    User user = new User
+        //    {
+        //        Username = registerViewModel.UserName,
+        //        Email = registerViewModel.Email,
+        //        Password = registerViewModel.Password,
+        //        RoleId = registerViewModel.RoleId
+
+        //    };
+        //    return Ok(await userService.AddUser(user,cancellationToken));
+        //}
+        
+        
         [HttpPost("[action]")]
-        //[Authorize]
-        public async Task<ApiResult<User>> Create(RegisterViewModel registerViewModel, CancellationToken cancellationToken)
+        [Authorize(Roles ="Admin")]
+        public async Task Create(UserDto userDto, CancellationToken cancellationToken)
         {
-            //if (!ModelState.IsValid) (We had Automated ModelStateValidation in ApiResultFilterAttribute - BadRequstObjectResult)
-            //    return BadRequest(registerViewModel);
-            
             User user = new User
             {
-                Username = registerViewModel.UserName,
-                Email = registerViewModel.Email,
-                Password = registerViewModel.Password,
-                RoleId = 1
-
+               RoleId = userDto.RoleId,
+               Password = userDto.Password,
+               IsActive = false
             };
-            return Ok(await userService.AddUser(user,cancellationToken));
+            await userService.AddUser(user, cancellationToken);
+            
         }
 
         [HttpGet("[action]")]

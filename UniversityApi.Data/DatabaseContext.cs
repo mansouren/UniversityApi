@@ -25,7 +25,18 @@ namespace UniversityApi.Data
         {
             var entitiesAssembly = typeof(IEntity).Assembly;
             modelBuilder.ApplyConfigurationsFromAssembly(entitiesAssembly);
-            base.OnModelCreating(modelBuilder); 
+            base.OnModelCreating(modelBuilder);
+
+            //modelBuilder.Entity<User>().HasData(
+            //    new User
+            //    {
+            //        Id =1 ,
+            //        Username = "WebAdmin",
+            //        Password = "123",
+            //        RoleId = 1,
+            //        IsActive = true
+            //    }
+            //);
         }
     }
 }

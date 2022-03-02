@@ -14,7 +14,7 @@ namespace UniversityApi.Services.Interfaces
     {
         Task UpdateLastLoginDate(User user, CancellationToken cancellationToken);
         Task UpdateSecurityStamp(User user, CancellationToken cancellationToken);
-        Task<User> AddUser(User user, CancellationToken cancellationToken);
+        Task AddUser(User user, CancellationToken cancellationToken);
         Task<UserExistence> IsExistUsernameAndEmail(string email, string username);
         Task<bool> IsExistUser(string username, string password);
         Task<User> GetUserByUsernameAndPassword(string username, string password);

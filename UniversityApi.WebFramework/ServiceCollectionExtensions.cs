@@ -9,9 +9,12 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using UniversityApi.Common;
+using UniversityApi.Common.Exceptions;
 using UniversityApi.Common.Utilities;
 using UniversityApi.Data;
 using UniversityApi.Data.Repositories;
@@ -27,7 +30,7 @@ namespace UniversityApi.WebFramework
         public static void RegisterServices(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
-
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IJwtService, JwtService>();
 
@@ -75,6 +78,14 @@ namespace UniversityApi.WebFramework
 
                 options.Events = new JwtBearerEvents
                 {
+                    OnAuthenticationFailed = context =>
+                    {
+                        //var logger = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger(nameof(JwtBearerEvents));
+                        //logger.LogError("Authentication failed.", context.Exception);
+                        if (context.Exception != null)
+                            throw new AppException(ApiResultStatusCode.UnAuthorized, "Authentication failed.", HttpStatusCode.Unauthorized, context.Exception, null);
+                        return Task.CompletedTask;
+                    },
                     OnTokenValidated = async context =>
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();

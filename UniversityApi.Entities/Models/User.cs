@@ -47,7 +47,7 @@ namespace UniversityApi.Entities.Models
             builder.Property(u => u.FirstName).HasMaxLength(250);
             builder.Property(u => u.LastName).HasMaxLength(250);
             builder.Property(u => u.Phone).HasMaxLength(11);
-            builder.Property(u => u.Email).IsRequired().HasMaxLength(250);
+            builder.Property(u => u.Email).HasMaxLength(250);
             builder.Property(u => u.Address).HasMaxLength(600);
 
         }

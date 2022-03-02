@@ -110,5 +110,14 @@ namespace UniversityApi.Common.Utilities
         {
             return str?.Length == 0 ? null : str;
         }
+
+        public static string GenerateCode()
+        {
+            Random random = new Random();
+            string code =random.Next(100000, 900000).ToString();
+            return code;
+        }
+
+       
     }
 }

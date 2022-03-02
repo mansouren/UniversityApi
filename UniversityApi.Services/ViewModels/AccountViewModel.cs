@@ -9,10 +9,12 @@ namespace UniversityApi.Services.ViewModels
 {
     public class RegisterViewModel : IValidatableObject
     {
-        [Display(Name ="نام کاربری")]
+        [Display(Name = "نام کاربری")]
         [Required(ErrorMessage = "لطفا مقداری وارد کنید")]
         [MaxLength(250, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر داشته باشد")]
         public string UserName { get; set; }
+
+        public int RoleId { get; set; }
 
         [Display(Name = "ایمیل")]
         [Required(ErrorMessage = "لطفا مقداری وارد کنید")]

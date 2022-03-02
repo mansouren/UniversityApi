@@ -38,7 +38,7 @@ namespace UniversityApi
         {
             //Register SiteSettings value for IOptionSnapShot which is placed in jwtService Constructor By DI
             services.Configure<SiteSettings>(Configuration.GetSection("SiteSettings"));
-            
+
             services.AddControllers();
             services.AddJwtAuthentication(_siteSettings.JwtSettings);
             services.RegisterServices();
