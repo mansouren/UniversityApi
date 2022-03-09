@@ -6,13 +6,14 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversityApi.Common;
 using UniversityApi.Common.Utilities;
 using UniversityApi.Entities.Common;
 using UniversityApi.Entities.Contracts;
 
 namespace UniversityApi.Data.Repositories
 {
-    public class Repository<TEntity> : IRepository<TEntity>
+    public class Repository<TEntity> : IRepository<TEntity>,IScopedDependency
         where TEntity : class, IEntity
     {
         protected readonly DatabaseContext dbContext;

@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace UniversityApi.Services.Services
 {
-    public class JwtService : IJwtService
+    public class JwtService : IJwtService,IScopedDependency
     {
         private readonly SiteSettings _settings;
         public JwtService(IOptionsSnapshot<SiteSettings> settings)

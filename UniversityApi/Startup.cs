@@ -1,3 +1,4 @@
+using Autofac;
 using ElmahCore.Mvc;
 using ElmahCore.Sql;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -16,6 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UniversityApi.Common;
 using UniversityApi.WebFramework;
+using UniversityApi.WebFramework.Autofac;
 using UniversityApi.WebFramework.MiddleWares;
 
 namespace UniversityApi
@@ -41,7 +43,7 @@ namespace UniversityApi
 
             services.AddControllers();
             services.AddJwtAuthentication(_siteSettings.JwtSettings);
-            services.RegisterServices();
+            //services.RegisterServices();
             services.AddDatabasecontext(Configuration);
             services.AddElmah<SqlErrorLog>(options =>
             {
@@ -52,6 +54,11 @@ namespace UniversityApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "UniversityApi", Version = "v1" });
             });
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.AddServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

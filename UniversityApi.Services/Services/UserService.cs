@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversityApi.Common;
 using UniversityApi.Common.Exceptions;
 using UniversityApi.Common.Security;
 using UniversityApi.Common.Utilities;
@@ -15,7 +16,7 @@ using UniversityApi.Services.ViewModels;
 
 namespace UniversityApi.Services.Services
 {
-    public class UserService : IUserService
+    public class UserService : IUserService , IScopedDependency
     {
         private readonly IUserRepository userRepository;
         private readonly IRepository<Teacher> teacherRepo;

@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversityApi.Common;
 using UniversityApi.Entities.Contracts;
 using UniversityApi.Entities.Models;
 
 namespace UniversityApi.Data.Repositories
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class UserRepository : Repository<User>, IUserRepository, IScopedDependency
     {
         public UserRepository(DatabaseContext dbContext) : base(dbContext)
         {
