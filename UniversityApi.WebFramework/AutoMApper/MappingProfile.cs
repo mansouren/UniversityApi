@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 using UniversityApi.Entities.Models;
 using UniversityApi.Services.Dtos;
 
-namespace UniversityApi.WebFramework.AutoMApper
-{
-   public class MappingProfile : Profile
-    {
-        public MappingProfile()
-        {
-            CreateMap<User, UserProfileDto>().ReverseMap()
-                                      .ForMember(u => u.Role,opt => opt.Ignore());
-            CreateMap<User, UserResultDto>().ReverseMap();
-        }
-    }
-}
+//namespace UniversityApi.WebFramework.AutoMApper
+//{
+//   //public class MappingProfile : Profile
+//   // {
+//   //     public MappingProfile()
+//   //     {
+//   //         CreateMap<User, UserProfileDto>().ReverseMap()
+//   //                                   .ForMember(u => u.Role,opt => opt.Ignore());
+//   //         CreateMap<User, UserResultDto>().ReverseMap();
+//   //     }
+//   // }
+//}

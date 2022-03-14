@@ -45,13 +45,16 @@ namespace UniversityApi
             //Register SiteSettings value for IOptionSnapShot which is placed in jwtService Constructor By DI
             services.Configure<SiteSettings>(Configuration.GetSection("SiteSettings"));
 
-            //AutoMapper Configuration
-            var mapperConfiguration = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingProfile());
-            });
-            IMapper mapper = mapperConfiguration.CreateMapper();
-            services.AddSingleton(mapper);
+            #region AutoMapper Configuration Old code
+            //var mapperConfiguration = new MapperConfiguration(mc =>
+            //{
+            //    mc.AddProfile(new MappingProfile());
+            //});
+            //IMapper mapper = mapperConfiguration.CreateMapper();
+            //services.AddSingleton(mapper);
+            #endregion
+
+            services.InitializeAutoMapper();
 
             services.AddControllers();
             services.AddJwtAuthentication(_siteSettings.JwtSettings);
