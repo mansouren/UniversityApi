@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,12 +26,17 @@ namespace UniversityApi.Controllers
         private readonly IUserService userService;
         private readonly ILogger<UserController> logger;
         private readonly IJwtService jwtService;
+        private readonly IMapper mapper;
 
-        public UserController(IUserService userService, ILogger<UserController> logger, IJwtService jwtService)
+        public UserController(IUserService userService,
+            ILogger<UserController> logger,
+            IJwtService jwtService,
+            IMapper mapper)
         {
             this.userService = userService;
             this.logger = logger;
             this.jwtService = jwtService;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -105,24 +111,31 @@ namespace UniversityApi.Controllers
             {
                 throw new BadHttpRequestException("کاربری با این مشخصات یافت نشد!");
             }
-            user.FirstName = profileDto.FirstName;
-            user.LastName = profileDto.LastName;
-            user.Phone = profileDto.Phone;
-            user.Address = profileDto.Address;
-            user.Email = profileDto.Email;
+            #region OldCode
+            //user.FirstName = profileDto.FirstName;
+            //user.LastName = profileDto.LastName;
+            //user.Phone = profileDto.Phone;
+            //user.Address = profileDto.Address;
+            //user.Email = profileDto.Email;
+            #endregion
+            mapper.Map(profileDto, user);
 
             await userService.UpdateProfile(user, cancellationToken);
 
-            var dto = new UserResultDto
-            {
-                Username = user.Username,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Phone = user.Phone,
-                Address = user.Address,
-                RoleTitle = user.Role.Title
-            };
+            #region OldCode
+            //var dto = new UserResultDto
+            //{
+            //    Username = user.Username,
+            //    Email = user.Email,
+            //    FirstName = user.FirstName,
+            //    LastName = user.LastName,
+            //    Phone = user.Phone,
+            //    Address = user.Address,
+            //    RoleTitle = user.Role.Title
+            //};
+            #endregion
+
+            var dto = mapper.Map<UserResultDto>(user);
 
             return dto;
         }

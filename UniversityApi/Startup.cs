@@ -1,4 +1,5 @@
 using Autofac;
+using AutoMapper;
 using ElmahCore.Mvc;
 using ElmahCore.Sql;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -18,6 +19,7 @@ using System.Threading.Tasks;
 using UniversityApi.Common;
 using UniversityApi.WebFramework;
 using UniversityApi.WebFramework.Autofac;
+using UniversityApi.WebFramework.AutoMApper;
 using UniversityApi.WebFramework.MiddleWares;
 
 namespace UniversityApi
@@ -25,12 +27,14 @@ namespace UniversityApi
     public class Startup
     {
         private readonly SiteSettings _siteSettings;
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
 
             //Reading From Appsettings.json section and cast to SiteSettings Class
             _siteSettings = configuration.GetSection("SiteSettings").Get<SiteSettings>();
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -40,6 +44,14 @@ namespace UniversityApi
         {
             //Register SiteSettings value for IOptionSnapShot which is placed in jwtService Constructor By DI
             services.Configure<SiteSettings>(Configuration.GetSection("SiteSettings"));
+
+            //AutoMapper Configuration
+            var mapperConfiguration = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            IMapper mapper = mapperConfiguration.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.AddControllers();
             services.AddJwtAuthentication(_siteSettings.JwtSettings);
