@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ using UniversityApi.Common.Utilities;
 using UniversityApi.Data.Repositories;
 using UniversityApi.Entities.Contracts;
 using UniversityApi.Entities.Models;
+using UniversityApi.Services.Dtos;
 using UniversityApi.Services.Interfaces;
 using UniversityApi.Services.ViewModels;
 
@@ -21,6 +23,8 @@ namespace UniversityApi.Services.Services
         private readonly IUserRepository userRepository;
         private readonly IRepository<Teacher> teacherRepo;
         private readonly IRepository<Student> studentRepo;
+
+        //public IQueryable<User> UserQuery { get => userRepository.Table; }
 
         public UserService(IUserRepository userRepository, IRepository<Teacher> teacherRepo, IRepository<Student> studentRepo)
         {
@@ -111,15 +115,17 @@ namespace UniversityApi.Services.Services
             return await userRepository.GetUsers();
         }
 
-        public async Task UpdateSecurityStamp(User user, CancellationToken cancellationToken)
-        {
-            user.SecurityStamp = Guid.NewGuid();
-            await userRepository.UpdateAsync(user, cancellationToken);
-        }
+        //public async Task UpdateSecurityStamp(User user, CancellationToken cancellationToken)
+        //{
+        //    user.SecurityStamp = Guid.NewGuid();
+        //    await userRepository.UpdateAsync(user, cancellationToken);
+        //}
 
         public async Task<User> GetUserById(int id, CancellationToken cancellationToken)
         {
-            return await userRepository.GetById(cancellationToken, id);
+            var user =await userRepository.TableAsNoTracking.Include(u => u.Role)
+                .SingleOrDefaultAsync(u => u.Id == id);
+            return user;
         }
 
         public async Task UpdateLastLoginDate(User user, CancellationToken cancellationToken)
@@ -127,5 +133,15 @@ namespace UniversityApi.Services.Services
             user.LastLoginDate = DateTimeOffset.Now;
             await userRepository.UpdateAsync(user, cancellationToken);
         }
+
+        public async Task UpdateProfile(User user, CancellationToken cancellationToken)
+        {
+            user.FirstName = user.FirstName.Trim().ToLower();
+            user.LastName = user.LastName.Trim().ToLower();
+            user.Email = user.Email.Trim().ToLower();
+            await userRepository.UpdateAsync(user, cancellationToken);
+        }
+
+        
     }
 }

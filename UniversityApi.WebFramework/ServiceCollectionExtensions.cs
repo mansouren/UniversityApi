@@ -27,14 +27,14 @@ namespace UniversityApi.WebFramework
 {
     public static class ServiceCollectionExtensions
     {
-        public static void RegisterServices(this IServiceCollection services)
-        {
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IJwtService, JwtService>();
+        //public static void RegisterServices(this IServiceCollection services)
+        //{
+        //    services.AddScoped<IUserRepository, UserRepository>();
+        //    services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        //    services.AddScoped<IUserService, UserService>();
+        //    services.AddScoped<IJwtService, JwtService>();
 
-        }
+        //}
 
         public static void AddDatabasecontext(this IServiceCollection services, IConfiguration configuration)
         {

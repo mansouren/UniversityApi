@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace UniversityApi.Controllers
         private readonly ILogger<UserController> logger;
         private readonly IJwtService jwtService;
 
-        public UserController(IUserService userService,ILogger<UserController> logger, IJwtService jwtService)
+        public UserController(IUserService userService, ILogger<UserController> logger, IJwtService jwtService)
         {
             this.userService = userService;
             this.logger = logger;
@@ -43,7 +44,7 @@ namespace UniversityApi.Controllers
         [HttpGet("{id:int}")]
         public async Task<ApiResult<User>> Get(int id, CancellationToken cancellationToken)
         {
-           var user= await userService.GetUserById(id, cancellationToken);
+            var user = await userService.GetUserById(id, cancellationToken);
             if (user == null)
                 return NotFound();
 
@@ -67,20 +68,20 @@ namespace UniversityApi.Controllers
         //    };
         //    return Ok(await userService.AddUser(user,cancellationToken));
         //}
-        
-        
+
+
         [HttpPost("[action]")]
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task Create(UserDto userDto, CancellationToken cancellationToken)
         {
             User user = new User
             {
-               RoleId = userDto.RoleId,
-               Password = userDto.Password,
-               IsActive = false
+                RoleId = userDto.RoleId,
+                Password = userDto.Password,
+                IsActive = false
             };
             await userService.AddUser(user, cancellationToken);
-            
+
         }
 
         [HttpGet("[action]")]
@@ -94,6 +95,36 @@ namespace UniversityApi.Controllers
 
             return jwtService.GenerateToken(user);
 
+        }
+
+        [HttpPut("[Action]")]
+        public async Task<UserResultDto> CompeleteProfile(int id, UserProfileDto profileDto, CancellationToken cancellationToken)
+        {
+            var user = await userService.GetUserById(id, cancellationToken);
+            if(user == null)
+            {
+                throw new BadHttpRequestException("کاربری با این مشخصات یافت نشد!");
+            }
+            user.FirstName = profileDto.FirstName;
+            user.LastName = profileDto.LastName;
+            user.Phone = profileDto.Phone;
+            user.Address = profileDto.Address;
+            user.Email = profileDto.Email;
+
+            await userService.UpdateProfile(user, cancellationToken);
+
+            var dto = new UserResultDto
+            {
+                Username = user.Username,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Phone = user.Phone,
+                Address = user.Address,
+                RoleTitle = user.Role.Title
+            };
+
+            return dto;
         }
     }
 }
