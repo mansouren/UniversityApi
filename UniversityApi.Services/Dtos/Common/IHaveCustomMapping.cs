@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UniversityApi.WebFramework.AutoMApper
+namespace UniversityApi.Services.Dtos.Common
 {
    public interface IHaveCustomMapping
     {

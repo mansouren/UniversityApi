@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UniversityApi.Services.Dtos;
+using UniversityApi.Services.Dtos.Common;
 
 namespace UniversityApi.WebFramework.AutoMApper
 {
@@ -22,8 +23,8 @@ namespace UniversityApi.WebFramework.AutoMApper
 
         public static void AddCustomMappingProfile(this IMapperConfigurationExpression config)
         {
-            
-            config.AddCustomMappingProfile(Assembly.GetEntryAssembly());
+            var serviceAssembly = typeof(IHaveCustomMapping).Assembly;
+            config.AddCustomMappingProfile(serviceAssembly);
         }
 
         public static void AddCustomMappingProfile(this IMapperConfigurationExpression config,params Assembly[] assemblies)

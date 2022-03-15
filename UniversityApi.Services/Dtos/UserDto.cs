@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -63,5 +64,13 @@ namespace UniversityApi.Services.Dtos
         public string Phone { get; set; }
         public string Email { get; set; }
         public string RoleTitle { get; set; }
+        public string FullName { get; set; }
+
+        public override void CustomMapping(IMappingExpression<User, UserResultDto> mappingExpression)
+        {
+            mappingExpression.ForMember(
+                dest => dest.FullName,
+                dest => dest.MapFrom(sourceMember => $"{FirstName} {LastName}"));
+        }
     }
 }
