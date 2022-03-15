@@ -20,8 +20,8 @@ namespace UniversityApi.Services.Interfaces
         Task<UserExistence> IsExistUsernameAndEmail(string email, string username);
         Task<bool> IsExistUser(string username, string password);
         Task<User> GetUserByUsernameAndPassword(string username, string password);
-        Task<IEnumerable<User>> GetUsers();
+        IQueryable<User> GetUsers();
         Task<User> GetUserById(int id, CancellationToken cancellationToken);
-        
+
     }
 }

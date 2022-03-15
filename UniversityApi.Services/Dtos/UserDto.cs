@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UniversityApi.Entities.Models;
+using UniversityApi.Services.Dtos.Common;
 
 namespace UniversityApi.Services.Dtos
 {
-    public class UserDto
+    public class UserDto :  BaseDto<UserDto,User>
     {
         [Display(Name = "نقش کاربر")]
         [Required(ErrorMessage = "لطفا مقداری وارد کنید")]
@@ -28,7 +29,7 @@ namespace UniversityApi.Services.Dtos
         public string RePassword { get; set; }
     }
 
-    public class UserProfileDto
+    public class UserProfileDto : BaseDto<UserProfileDto,User>
     {
 
         [Display(Name = "نام")]
@@ -53,7 +54,7 @@ namespace UniversityApi.Services.Dtos
         public string Email { get; set; }
     }
 
-    public class UserResultDto
+    public class UserResultDto : BaseDto<UserResultDto,User>
     {
         public string Username { get; set; }
         public string FirstName { get; set; }

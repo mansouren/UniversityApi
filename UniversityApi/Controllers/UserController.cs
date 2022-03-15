@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -42,19 +43,21 @@ namespace UniversityApi.Controllers
         [HttpGet]
         //[Authorize(Roles="User")]
         //[ApiResultFilter]
-        public async Task<IEnumerable<User>> Get()
+        public async Task<IEnumerable<UserResultDto>> Get()
         {
-            return await userService.GetUsers();
+            var userQuery =  userService.GetUsers();
+            var dtolst = await userQuery.ProjectTo<UserResultDto>(mapper.ConfigurationProvider).ToListAsync();
+            return dtolst;
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ApiResult<User>> Get(int id, CancellationToken cancellationToken)
+        public async Task<ApiResult<UserResultDto>> Get(int id, CancellationToken cancellationToken)
         {
             var user = await userService.GetUserById(id, cancellationToken);
             if (user == null)
                 return NotFound();
-
-            return user;
+            var dto = UserResultDto.FromEntity(mapper, user);
+            return dto;
         }
 
         //[HttpPost("[action]")]
@@ -80,12 +83,17 @@ namespace UniversityApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task Create(UserDto userDto, CancellationToken cancellationToken)
         {
-            User user = new User
-            {
-                RoleId = userDto.RoleId,
-                Password = userDto.Password,
-                IsActive = false
-            };
+            #region Old Code
+            //User user = new User
+            //{
+            //    RoleId = userDto.RoleId,
+            //    Password = userDto.Password,
+            //    IsActive = false
+            //};
+            #endregion
+
+            var user = userDto.ToEntity(mapper);
+
             await userService.AddUser(user, cancellationToken);
 
         }
@@ -118,7 +126,8 @@ namespace UniversityApi.Controllers
             //user.Address = profileDto.Address;
             //user.Email = profileDto.Email;
             #endregion
-            mapper.Map(profileDto, user);
+            //mapper.Map(profileDto, user); OldCode
+            profileDto.ToEntity(mapper, user); //Using BaseDto's Methods
 
             await userService.UpdateProfile(user, cancellationToken);
 
@@ -135,8 +144,8 @@ namespace UniversityApi.Controllers
             //};
             #endregion
 
-            var dto = mapper.Map<UserResultDto>(user);
-
+            //var dto = mapper.Map<UserResultDto>(user); OldCode
+            var dto = UserResultDto.FromEntity(mapper,user);//Using BaseDto's Methods
             return dto;
         }
     }

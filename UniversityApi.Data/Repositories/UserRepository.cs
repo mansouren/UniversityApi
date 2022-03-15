@@ -25,11 +25,11 @@ namespace UniversityApi.Data.Repositories
             return user;
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
-        {
-            //dbContext.Users output is DbSet<User>
-            return await TableAsNoTracking.ToListAsync();//Equals dbContext.Users.ToListAsync()
-        }
+        //public async Task<IEnumerable<User>> GetUsers()
+        //{
+        //    //dbContext.Users output is DbSet<User>
+        //    return await TableAsNoTracking.ToListAsync();//Equals dbContext.Users.ToListAsync()
+        //}
 
         public async Task<bool> IsExistEmail(string email)
         {

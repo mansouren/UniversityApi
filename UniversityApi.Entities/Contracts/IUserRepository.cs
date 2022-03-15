@@ -9,7 +9,7 @@ namespace UniversityApi.Entities.Contracts
 {
     public interface IUserRepository : IRepository<User>
     {
-        Task<IEnumerable<User>> GetUsers();
+        //Task<IEnumerable<User>> GetUsers();
         Task<bool> IsExistEmail(string email);
         Task<bool> IsExistUsername(string username);
         Task<bool> IsExistUser(string username, string password);

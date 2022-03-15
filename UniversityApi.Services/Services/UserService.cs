@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,19 +20,24 @@ using UniversityApi.Services.ViewModels;
 
 namespace UniversityApi.Services.Services
 {
-    public class UserService : IUserService , IScopedDependency
+    public class UserService : IUserService, IScopedDependency
     {
         private readonly IUserRepository userRepository;
         private readonly IRepository<Teacher> teacherRepo;
         private readonly IRepository<Student> studentRepo;
+        private readonly IMapper mapper;
 
         //public IQueryable<User> UserQuery { get => userRepository.Table; }
 
-        public UserService(IUserRepository userRepository, IRepository<Teacher> teacherRepo, IRepository<Student> studentRepo)
+        public UserService(IUserRepository userRepository,
+            IRepository<Teacher> teacherRepo,
+            IRepository<Student> studentRepo,
+            IMapper mapper)
         {
             this.userRepository = userRepository;
             this.teacherRepo = teacherRepo;
             this.studentRepo = studentRepo;
+            this.mapper = mapper;
         }
 
         public async Task<UserExistence> IsExistUsernameAndEmail(string email, string username)
@@ -93,7 +100,7 @@ namespace UniversityApi.Services.Services
                 };
                 await studentRepo.AddAsync(student, cancellationToken);
             }
-           
+
         }
 
         public async Task<bool> IsExistUser(string username, string password)
@@ -110,21 +117,17 @@ namespace UniversityApi.Services.Services
             return user;
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public IQueryable<User> GetUsers()
         {
-            return await userRepository.GetUsers();
-        }
+            return userRepository.TableAsNoTracking;
 
-        //public async Task UpdateSecurityStamp(User user, CancellationToken cancellationToken)
-        //{
-        //    user.SecurityStamp = Guid.NewGuid();
-        //    await userRepository.UpdateAsync(user, cancellationToken);
-        //}
+        }
 
         public async Task<User> GetUserById(int id, CancellationToken cancellationToken)
         {
-            var user =await userRepository.TableAsNoTracking.Include(u => u.Role)
+            var user = await userRepository.TableAsNoTracking.Include(u => u.Role)
                 .SingleOrDefaultAsync(u => u.Id == id);
+
             return user;
         }
 
@@ -142,6 +145,6 @@ namespace UniversityApi.Services.Services
             await userRepository.UpdateAsync(user, cancellationToken);
         }
 
-        
+
     }
 }
